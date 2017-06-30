@@ -59,7 +59,7 @@ City: City where the brewery is located, State: State where the brewery is locat
 
 ------
 
-# First step is to get data from the csv files into R data sets
+# First step is to get data from the csv files into R data sets beers, breweries
 
 
 ```r
@@ -74,6 +74,7 @@ breweries <-read.csv("DataLoad/Data/Breweries.csv")
 
 # 1. How many breweries are present in each state?
 
+## I will use summary command to get the state level totals
 
 ```r
 knitr::opts_chunk$set(echo = TRUE, include = TRUE)
@@ -92,6 +93,8 @@ summary(breweries$State)
 ## Seems like Colorado has maximum number (47) of breweries
 
 # 2. Merge beer data with breweries data by brewery id. Print first 6 observations and the last six observations to check the merged file. 
+
+## Now before I combine data sets beers and breweries I have to make sure the column by which I am combining has same name in both data sets and then use Merge command to merge the two data sets in to a new data set named Combined.
 
 
 ```r
@@ -168,6 +171,7 @@ tail(combined)
 
 # 3. Report the number of NA’s in each column.
 
+## I will first update any blank spaces with NA and then use sapply command to check NAs in each column
 
 
 ```r
@@ -188,6 +192,7 @@ sapply(combined, function(x) length(which(is.na(x))))
 
 # 4. Compute the median alcohol content and international bitterness unit for each state. Plot a bar chart to compare.
 
+## I will use aggregate function to get the median ABV, IBU by state and then use ggplot to plot the bar charts.
 
 ```r
 knitr::opts_chunk$set(echo = TRUE, include = TRUE)
@@ -323,7 +328,7 @@ MedIBU_ST
 ```
 
 ```r
-IBU_BC<-ggplot(na.omit(MedIBU_ST), aes(x=State, y=IBU)) + geom_bar(stat="identity") + theme(axis.text.x = element_text(angle=90, hjust=1))
+IBU_BC<-ggplot(na.omit(MedIBU_ST), aes(x=State, y=IBU)) + geom_bar(stat="identity",fill="orange") + theme(axis.text.x = element_text(angle=90, hjust=1))
 IBU_BC
 ```
 
@@ -394,6 +399,8 @@ summary(combined$ABV)
 
 # 7. Is there a relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.
 
+## I will use ggplot with alcoholic content on X axis and bitterness unit on Y axis
+
 ```r
 knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE)
 
@@ -423,7 +430,8 @@ pr
 
 ## Based on the above plot there seems to be a slightly above average positive linear relationship between the bitterness of beer and its alcoholic content.The person's r value is 0.67.
 
-
+# Conclusion: 
+## Based on the above analysis, it seems that the median alcohol content is fairly similar across all the states. However, the median bitterness unit is highest in Maine. Of all the states Colorado seems to have the beer with highest alcoholic content and Orgon seems to have the most bitter beer. There also seems to be a 'above average'moderate' positive linear relationship between the bitterness of the beer and alcoholic content across USA with a pearson's r of 0.67. 
 
 # R Markdown
 
