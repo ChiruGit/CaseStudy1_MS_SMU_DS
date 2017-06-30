@@ -1,16 +1,12 @@
 ---
-output: 
-  html_document: 
-    keep_md: yes
----
----
 title: "USBeers"
 author: "Chiranjeevi Mallavarapu"
 date: "6/29/2017"
 output: 
-  html_document:
-   keep_md: yes
-----
+  html_document: 
+    keep_md: yes
+---
+
 
 # Project: US Beers and Breweries - An insight
 

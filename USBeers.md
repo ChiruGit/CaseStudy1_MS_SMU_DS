@@ -1,11 +1,7 @@
----
-title: "USBeers"
-author: "Chiranjeevi Mallavarapu"
-date: "6/29/2017"
-output: 
-  html_document:
-   keep_md: yes
-----
+# USBeers
+Chiranjeevi Mallavarapu  
+6/29/2017  
+
 
 # Project: US Beers and Breweries - An insight
 
