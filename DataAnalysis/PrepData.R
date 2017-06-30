@@ -3,7 +3,7 @@
 
 
 # Run get data 
-source('DataCleanup/GetData.R')
+source('DataLoad/GetData.R')
 
 #1. How many breweries are present in each state?
 summary(breweries$State)
@@ -30,7 +30,10 @@ tail(combined)
 
 #3. Report the number of NA’s in each column.
 
-# We will use sapply and run function of is.na on all columns
+# We will use sapply and run function of is.na on all columns, but before that lets replace any blanks with NA
+
+combined[combined==""] <- NA
+
 sapply(combined, function(x) length(which(is.na(x))))
 
 # The IBU column seems to having a total of 1005 NA's and ABV column having 62 NAs remaining columns
