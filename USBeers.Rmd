@@ -1,0 +1,192 @@
+---
+title: "USBeers"
+author: "Chiranjeevi Mallavarapu"
+date: "6/29/2017"
+output: 
+  html_document:
+   keep_md: true
+----
+
+# Project: US Beers and Breweries - An insight
+
+----
+
+
+# Project Introduction: 
+
+This analysis to find out how the beers and breweries are distributed across the states and also overall relationship in terms of alcoholic content vs bitterness of the beers in USA. The data input comprises of two data sets beers.csv, breweries.csv. The specific questions are addressed one by one below.
+
+
+* Goal: Create an RStudio/GitHub project for the analysis of the beer, breweries data sets so anyone can both reproduce the results and/or access published results. 
+
+* Deliverable: Markdown file and all relevant files uploaded to GitHub
+
+
+-----
+
+## File Organization
+
+* Repository Main folder: contains README.md, USBeers.Rmd,USBeers.md,USBeers.html files and sub folders of DataCleanup and DataAnalysis 
+
+* DataCleanup folder:  Contains code for getting the data, sub folder 'Data' contains the data files
+  
+  Files:
+  - /DataCleanup/GetData.R: loads data from below source data files 
+  - /DataCleanup/Data/Beer.csv
+  - /DataCleanup/Data/Breweries.csv
+  
+* DataAnalysis folder:  Contains statistical analysis code
+  Files:
+  - /DataAnalysis/PrepData.R: combines the two data sets provided and contains the code to answer the required questions on the dataset
+  
+Further descriptions about the data sets: 
+
+Beers dataset contains a list of 2410 US craft beers and Breweries dataset contains 558 US breweries. 
+
+The field descriptions are as below.
+
+Beers.csv:
+
+Name: Name of the beer,
+Beer ID: Unique identifier of the beer,
+ABV: Alcohol by volume of the beer,
+IBU: International Bitterness Units of the beer,
+Brewery ID: Brewery id associated with the beer,
+Style: Style of the beer,
+Ounces: Ounces of beer.
+
+Breweries.csv:
+
+Brew ID: Unique identifier of the brewery, Name: Name of the brewery,
+City: City where the brewery is located, State: State where the brewery is located.
+
+
+------
+
+# First step is to get data from the csv files into R data sets
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+
+library(plyr)
+library(ggplot2)
+
+beers <-read.csv("DataLoad/Data/Beers.csv")
+breweries <-read.csv("DataLoad/Data/Breweries.csv")
+```
+
+# 1. How many breweries are present in each state?
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+summary(breweries$State)
+```
+
+## Seems like Colorado has maximum number (47) of breweries
+
+# 2. Merge beer data with breweries data by brewery id. Print first 6 observations and the last six observations to check the merged file. 
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+# Make sure to have the by column name same in both datasets
+colnames(breweries)[1] <- "Brewery_id"
+combined <- merge(beers,breweries,by="Brewery_id")
+```
+
+
+# First 6 observations of the merged dataset 
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+head(combined)
+```
+
+# Last 6 observations of the merged dataset
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+tail(combined)
+```   
+
+# 3. Report the number of NA’s in each column.
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+# We will use sapply and run function of is.na on all columns
+sapply(combined, function(x) length(which(is.na(x))))
+```
+
+## The IBU column has a total of 1005 NA's and ABV column has 62 NAs remaining all columns seems to be fully populated 
+
+# 4. Compute the median alcohol content and international bitterness unit for each state. Plot a bar chart to compare.
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+ 
+MedABV_ST<-aggregate( ABV ~ State, data=combined, FUN=median)
+MedABV_ST
+ABV_BC<-ggplot(na.omit(MedABV_ST), aes(x=State, y=ABV)) + geom_bar(stat="identity",fill="steelblue")+ theme(axis.text.x = element_text(angle=90, hjust=1))
+ABV_BC
+```
+
+## The bar chart above for median alcohol content by state indicates that most of the states are above 0.05 with Kentucky, Washington DC, Michigan, New Mexico and West Virginia above 0.06
+
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+
+MedIBU_ST<-aggregate( IBU ~ State, data=combined, FUN=median)
+MedIBU_ST
+IBU_BC<-ggplot(na.omit(MedIBU_ST), aes(x=State, y=IBU)) + geom_bar(stat="identity") + theme(axis.text.x = element_text(angle=90, hjust=1))
+IBU_BC
+```
+
+## The bar chart above for median international bitterness unit by state indicates that Maine and West Virginia are the top 2 states having the highest median bitterness unit beers, with Floria and Georgia next in line
+
+
+# 5.Which state has the maximum alcoholic beer? Which state has the most bitter beer?
+
+## State that has maximum alcoholic beer
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+combined[which.max(combined$ABV), ]$State
+combined[which.max(combined$ABV), ]$ABV
+
+```
+## Colorado seems to be having the highest alcoholic beer with an ABV rating of 0.128
+
+## State that has most bitter beer
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+
+combined[which.max(combined$IBU), ]$State
+combined[which.max(combined$IBU), ]$IBU
+
+``` 
+## Oregon seems to be having the highest bitter unit beer with an IBU of 138
+
+
+# 6. Summary statistics for ABV (Alcohol by volume) variable.
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE)
+
+summary(combined$ABV)
+```
+## The alcohol content ABU seems to be varying from 0.001 to 0.128 with a median of 0.056 across all states the IQR (Q3-Q1) = 0.017
+
+# 7. Is there a relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.
+```{r }
+knitr::opts_chunk$set(echo = TRUE, include = TRUE, warning = FALSE)
+
+ggplot(na.omit(combined), aes(x=ABV, y=IBU)) +geom_point(shape=1) + geom_smooth(method=lm)   
+
+pr <- cor.test(combined$ABV, combined$IBU, method = "pearson")
+pr
+```
+
+## Based on the above plot there seems to be a slightly above average positive linear relationship between the bitterness of beer and its alcoholic content.The person's r value is 0.67.
+
+
+
+# R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
