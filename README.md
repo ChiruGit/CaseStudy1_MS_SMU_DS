@@ -1,5 +1,5 @@
-# Project: Doing Data Science - Case Study 1
-#  Author: Chiranjeevi Mallavarapu, MSDS 6306 Doing Data Science - 405
+# Project: US Beers and Breweries - An insight
+#  Author: Chiranjeevi Mallavarapu
 
 ------ 
 
