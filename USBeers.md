@@ -409,25 +409,6 @@ ggplot(na.omit(combined), aes(x=ABV, y=IBU)) +geom_point(shape=1) + geom_smooth(
 
 ![](USBeers_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
 
-```r
-pr <- cor.test(combined$ABV, combined$IBU, method = "pearson")
-pr
-```
-
-```
-## 
-## 	Pearson's product-moment correlation
-## 
-## data:  combined$ABV and combined$IBU
-## t = 33.863, df = 1403, p-value < 2.2e-16
-## alternative hypothesis: true correlation is not equal to 0
-## 95 percent confidence interval:
-##  0.6407982 0.6984238
-## sample estimates:
-##       cor 
-## 0.6706215
-```
-
 ## I will now calculate the pearson's r value for linear correlation between ABV and IBU
 
 ```r
@@ -454,7 +435,7 @@ pr
 ## Based on the above plot there seems to be a positive linear relationship between the bitterness of beer and its alcoholic content. The person's r value of 0.67 indicates that the linear relationship is moderate.
 
 # Conclusion: 
-## Based on the above analysis, it seems that the median alcohol content is fairly similar across all the states. However, the median bitterness unit is highest in Maine. Of all the states Colorado seems to have the beer with highest alcoholic content and Orgon seems to have the most bitter beer. There also seems to be a 'above average'moderate' positive linear relationship between the bitterness of the beer and alcoholic content across USA with a pearson's r of 0.67. 
+## Based on the above analysis, it seems that the median alcohol content is fairly similar across all the states. However, the median bitterness unit is highest in Maine. Of all the states Colorado seems to have the beer with highest alcoholic content and Oregon seems to have the most bitter beer. There also seems to be a 'moderate' positive linear relationship between the bitterness of the beer and alcoholic content across USA with a pearson's r of 0.67. 
 
 # R Markdown
 
